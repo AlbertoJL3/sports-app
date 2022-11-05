@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>MARV'S SPORTS</title>
 </head>
+
 <body>
-    
+    <header>
+        <p>Welcome to <span> MARV'S SPORTS</span> live streaming page</p>
+    </header>
+    <main>
+        <div class="content">
+            <select class="form-control">
+                <option>Select your League</option>
+            </select>
+            <select class="form-control">
+                <option>Select your Team</option>
+            </select>
+
+            <input class="form-control" id="datepicker" autocomplete="off" placeholder="Select a Date" />
+
+            <button type="button" class="btn btn-dark">Search</button>
+        </div>
 </body>
+</main>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="./assets/js/script.js"></script>
+
 </html>
