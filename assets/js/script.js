@@ -9,8 +9,29 @@ $(function () {
 // Declare API news key
 var apiNewsKey = 'db4aab48-4635-49ff-a537-39a673481b78';
 
+// Functionality to get each articles title, url, date published
+function getArticles(data){
+    // Declare array of articles
+  var articles = data.response.results;
+   
+  // Loop through articles
+  for(let i = 0; i< articles.length ; i++){
+    // Title of article
+    var titleArticle = articles[i].webTitle;
+    console.log(titleArticle)
+    // Url of article
+    var urlArticle = articles[i].webUrl;
+      console.log(urlArticle)
+    // Date published
+    var datePublished = moment(articles[i].webPublicationDate).format('MM/DD/YYYY');
+    console.log(datePublished)
+    }
+}
+
 //  Function to get data
 function getNews(data) {
+
+  getArticles(data);
 
 }
 
@@ -26,7 +47,7 @@ var getApiNews = function (userLeague, userTeam, userDate) {
         response.json().then(function (data) {
           console.log(data)
           // Function to get data
-          getNews(data)
+          getNews(data);
         });
       } else {
         // Input not correct, display status
