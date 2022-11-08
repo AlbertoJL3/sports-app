@@ -14,7 +14,6 @@ const options = {
   }
 };
 
-
 //function for getting league IDs that will then be used for other functions such as getMatchData/getTeamData
 function getLeagueData() {
   fetch('https://livescore6.p.rapidapi.com/leagues/v2/list?Category=soccer', options)
@@ -50,14 +49,27 @@ function getLeagueData() {
 //function that gets a Match's Eid for getMatchInfo function
 function getMatchEid(league, team) {
   var Scd = '&Scd=' + team;
+  //if team isn't picked then just use league 
   if (team == null) {
-    Scd = ''
+    Scd = ''  
   } else {
     return
   }
-  fetch('https://livescore6.p.rapidapi.com/matches/v2/list-by-league?Category=soccer&Ccd='+league+''+Scd+'&Timezone=-7', options)
+  
+// 
+  fetch('https://livescore6.p.rapidapi.com/matches/v2/list-by-league?Category=soccer&Ccd=' + league + '' + Scd + '&Timezone=+1', options)
+    .then(response => response.json())
+    //modify to return Eid
+    .then(response => console.log(response))
+    .catch(err => console.error(err));
+}
+
+//displays match information for a given day
+function getMatchByDate() {
+  fetch('https://livescore6.p.rapidapi.com/matches/v2/list-by-date?Category=soccer&Snm=premier-league&Date=20221106&Timezone=+1', options)
     .then(response => response.json())
     .then(response => console.log(response))
     .catch(err => console.error(err));
 }
-getMatchEid('champions-league')
+
+getMatchByDate()
