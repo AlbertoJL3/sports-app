@@ -8,26 +8,29 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
         integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> <!-- checking jquery from stackoverflow -->
     <link rel="stylesheet" href="./assets/css/style.css">
     <title>MARV'S SPORTS</title>
 </head>
 
 <body>
     <header>
-        <p>Welcome to <span> MARV'S SPORTS</span> live streaming page</p>
+        <p id="welcome-note">Welcome to <span> MARV'S SPORTS</span> live streaming page</p>  <!-- added id welcome-note to p tags to hide onclick of search btn -->
+       
     </header>
     <main>
         <div class="content">
-            <select class="form-control">
+            <!-- added form class to all dropdowns to create new var in js  -->
+            <select class="form-control form">
                 <option>Select your League</option>
             </select>
-            <select class="form-control">
+            <select class="form-control form">
                 <option>Select your Team</option>
             </select>
 
-            <input class="form-control" id="datepicker" autocomplete="off" placeholder="Select a Date" />
+            <input class="form-control form" id="datepicker" autocomplete="off" placeholder="Select a Date" />
 
-            <button type="button" class="btn btn-dark">Search</button>
+            <button id="search-btn" type="button" class="btn btn-dark">Search</button>
         </div>
 </body>
 </main>
