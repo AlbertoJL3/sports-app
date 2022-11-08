@@ -14,31 +14,50 @@ const options = {
   }
 };
 
-fetch('https://livescore6.p.rapidapi.com/leagues/v2/list?Category=soccer', options)
-  .then(function (response) {
-    return response.json();
-  })
-  .then(function (data) {
-    console.log(data)
 
-    var PremierLeagueData = data.Ccg[0].Stages[0];
-    var SpanishLeagueData = data.Ccg[1].Stages[0];
-    var GermanLeagueData = data.Ccg[3].Stages[0];
-    var FrenchLeagueData = data.Ccg[4].Stages[0];
-    var ChampionsLeagueData = data.Ccg[7].Stages[0];
-    var WorldCup2022Data = data.Ccg[10].Stages;
+//function for getting league IDs that will then be used for other functions such as getMatchData/getTeamData
+function getLeagueData() {
+  fetch('https://livescore6.p.rapidapi.com/leagues/v2/list?Category=soccer', options)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      //saves each league's data into a var
+      var PremierLeagueData = data.Ccg[0].Stages[0];
+      var SpanishLeagueData = data.Ccg[1].Stages[0];
+      var GermanLeagueData = data.Ccg[3].Stages[0];
+      var FrenchLeagueData = data.Ccg[4].Stages[0];
+      var ChampionsLeagueData = data.Ccg[7].Stages[0];
+      var WorldCup2022Data = data.Ccg[10].Stages;
 
-    
-    var leagueData = {
-      PremierLeagueData,
-      SpanishLeagueData,
-      GermanLeagueData,
-      FrenchLeagueData,
-      ChampionsLeagueData,
-      WorldCup2022Data
-    }
+      //creates object containing every league that we want
+      var leagueData = {
+        PremierLeagueData,
+        SpanishLeagueData,
+        GermanLeagueData,
+        FrenchLeagueData,
+        ChampionsLeagueData,
+        WorldCup2022Data
+      }
 
-    console.log(leagueData)
-    localStorage.setItem('leagueData', JSON.stringify(leagueData))
-  })
-  .catch(err => console.error(err));
+      //locally stores our desired league
+      localStorage.setItem('leagueData', JSON.stringify(leagueData))
+    })
+    //not sure what this is but API docs recommended using it
+    .catch(err => console.error(err));
+}
+
+//function that gets a Match's Eid for getMatchInfo function
+function getMatchEid(league, team) {
+  var Scd = '&Scd=' + team;
+  if (team == null) {
+    Scd = ''
+  } else {
+    return
+  }
+  fetch('https://livescore6.p.rapidapi.com/matches/v2/list-by-league?Category=soccer&Ccd='+league+''+Scd+'&Timezone=-7', options)
+    .then(response => response.json())
+    .then(response => console.log(response))
+    .catch(err => console.error(err));
+}
+getMatchEid('champions-league')
