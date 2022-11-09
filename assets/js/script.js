@@ -15,6 +15,19 @@ var apiNewsKey = 'db4aab48-4635-49ff-a537-39a673481b78';
 function getArticles(data) {
   // Declare array of articles
   var articles = data.response.results;
+
+  // Display Soccer News
+  var headerNewsEl = document.createElement('h2')
+  headerNewsEl.textContent = 'Soccer News'
+  headerNewsEl.style.cssText = `
+  background-color: darkblue;
+  color: white;
+  font-size: 50px;
+  text-align: center;
+  padding: 5px 0;
+`;
+ 
+  newsContainer.appendChild(headerNewsEl)
  
   // Loop through articles
   for (let i = 0; i < newsCount + 1; i++) {
@@ -37,24 +50,38 @@ function displayNews(titleArticle, urlArticle, datePublished) {
 
   // Display Title
   var newsEl = document.createElement('div');
-  newsEl.style.border = "solid 2px black";
-  newsEl.style.margin = "10px";
+  newsEl.style.cssText = `
+  border:solid 2px black;
+  text-align: center;
+  margin-top: 10px;
+`;
   var titleEl = document.createElement('h4');
   titleEl.textContent = titleArticle;
   newsEl.appendChild(titleEl);
-  newsContainer.appendChild(newsEl);
+ 
   
-  // Display parse date time ago for the published date
-  var dateEl = document.createElement('p');
-  dateEl.textContent = moment(datePublished).fromNow();;
-  newsEl.appendChild(dateEl);
-
   // Display the url of the news page
   var urlEl = document.createElement('a');
   urlEl.setAttribute('href', urlArticle)
+  urlEl.style.cssText = `
+  color: green;
+  padding-right: 10px;
+ 
+`;
   urlEl.textContent = urlArticle;
   newsEl.appendChild(urlEl);
 
+// Display parse date time ago for the published date
+  var dateEl = document.createElement('p');
+  dateEl.textContent = moment(datePublished).fromNow();
+  dateEl.style.cssText = `
+  color: grey;
+  padding-right: 10px;
+  text-align: right;
+`;
+  newsEl.appendChild(dateEl);
+  
+  newsContainer.appendChild(newsEl);
 }
 
 
