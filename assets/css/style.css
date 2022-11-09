@@ -22,32 +22,32 @@ header {
 }
 
 .content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.content div {
     width: 500px;
     border: 5px solid rgb(2, 2, 2);
     padding: 50px;
     margin: 100px;
-    flex-grow: 1;
-    border: solid 5px rgb(8, 9, 8)
+       display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-direction: column;
 }
 
-/* #box2 {
-    width: 500px;
-    border: 5px solid rgb(2, 2, 2);
-    padding: 50px;
-    margin: 100px;
-    border: solid 5px rgb(8, 9, 8)
+.content-element { 
+    margin-bottom: 20px;
+
+
 }
 
-#box3 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+/* Cards are split into two columns at 992px or smaller */
+@media screen and (max-width: 992px) {
+    .card {
+        width: 50%;
+    }
+}
+
+/* Cards are stacked on top of each other at 768px or smaller */
+@media screen and (max-width: 768px) {
+    .card {
+        width: 100%;
+    }
 }
