@@ -5,71 +5,51 @@ $(function () {
     changeYear: true,
   });
 });
+//get leagueID and set as var
+
 
 const options = {
   method: 'GET',
   headers: {
     'X-RapidAPI-Key': 'cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11',
-    'X-RapidAPI-Host': 'livescore6.p.rapidapi.com'
+    'X-RapidAPI-Host': 'footapi7.p.rapidapi.com'
   }
 };
 
-//function for getting league IDs that will then be used for other functions such as getMatchData/getTeamData
-function getLeagueData() {
-  fetch('https://livescore6.p.rapidapi.com/leagues/v2/list?Category=soccer', options)
+//user inputs
+var date = '06/11/2022';
+var leagueID = 1;
+var eventsData = {};
+
+function getMatchData() {
+  fetch('https://footapi7.p.rapidapi.com/api/matches/' + date, options)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-      //saves each league's data into a var
-      var PremierLeagueData = data.Ccg[0].Stages[0];
-      var SpanishLeagueData = data.Ccg[1].Stages[0];
-      var GermanLeagueData = data.Ccg[3].Stages[0];
-      var FrenchLeagueData = data.Ccg[4].Stages[0];
-      var ChampionsLeagueData = data.Ccg[7].Stages[0];
-      var WorldCup2022Data = data.Ccg[10].Stages;
+      for (i = 0; i < 100; i++) {
+        if (data.events[i].tournament.id == leagueID) {
+          eventsData[i] = data.events[i]
 
-      //creates object containing every league that we want
-      var leagueData = {
-        PremierLeagueData,
-        SpanishLeagueData,
-        GermanLeagueData,
-        FrenchLeagueData,
-        ChampionsLeagueData,
-        WorldCup2022Data
+        }
       }
-
-      //locally stores our desired league
-      localStorage.setItem('leagueData', JSON.stringify(leagueData))
+      //saves premier league data
+      if (leagueID = 1) {
+        localStorage.setItem('PremierLeagueData', JSON.stringify(eventsData))
+      }
+      //saves premier league data
+     else if (leagueID = 2) {
+       localStorage.setItem('PremierLeagueData', JSON.stringify(eventsData))
+     }
+      console.log(eventsData)
     })
-    //not sure what this is but API docs recommended using it
-    .catch(err => console.error(err));
 }
 
-//function that gets a Match's Eid for getMatchInfo function
-function getMatchEid(league, team) {
-  var Scd = '&Scd=' + team;
-  //if team isn't picked then just use league 
-  if (team == null) {
-    Scd = ''  
-  } else {
-    return
-  }
-  
-// 
-  fetch('https://livescore6.p.rapidapi.com/matches/v2/list-by-league?Category=soccer&Ccd=' + league + '' + Scd + '&Timezone=+1', options)
-    .then(response => response.json())
-    //modify to return Eid
-    .then(response => console.log(response))
-    .catch(err => console.error(err));
-}
 
-//displays match information for a given day
-function getMatchByDate() {
-  fetch('https://livescore6.p.rapidapi.com/matches/v2/list-by-date?Category=soccer&Snm=premier-league&Date=20221106&Timezone=+1', options)
-    .then(response => response.json())
-    .then(response => console.log(response))
-    .catch(err => console.error(err));
-}
+// if the match is in the past: 
+//need to get home team name, home team score//away team name, away team score
 
-getMatchByDate()
+//if the match is in the future: 
+//need to get home team name, away team name and date of event. 
+
+getMatchData()
