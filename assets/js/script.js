@@ -7,38 +7,67 @@ $(function () {
 });
 
 // Declare API news key
+var newsCount = 3; 
+var newsContainer = document.querySelector(".new-container")
 var apiNewsKey = 'db4aab48-4635-49ff-a537-39a673481b78';
 
 // Functionality to get each articles title, url, date published
-function getArticles(data){
-    // Declare array of articles
+function getArticles(data) {
+  // Declare array of articles
   var articles = data.response.results;
-   
+ 
   // Loop through articles
-  for(let i = 0; i< articles.length ; i++){
+  for (let i = 0; i < newsCount + 1; i++) {
     // Title of article
     var titleArticle = articles[i].webTitle;
     console.log(titleArticle)
     // Url of article
     var urlArticle = articles[i].webUrl;
-      console.log(urlArticle)
+    console.log(urlArticle)
     // Date published
     var datePublished = moment(articles[i].webPublicationDate).format('MM/DD/YYYY');
     console.log(datePublished)
-    }
+
+    displayNews(titleArticle, urlArticle, datePublished);
+  }
 }
+
+// Functionality to display news
+function displayNews(titleArticle, urlArticle, datePublished) {
+
+  // Display Title
+  var newsEl = document.createElement('div');
+  newsEl.style.border = "solid 2px black";
+  newsEl.style.margin = "10px";
+  var titleEl = document.createElement('h4');
+  titleEl.textContent = titleArticle;
+  newsEl.appendChild(titleEl);
+  newsContainer.appendChild(newsEl);
+  
+  // Display parse date time ago for the published date
+  var dateEl = document.createElement('p');
+  dateEl.textContent = moment(datePublished).fromNow();;
+  newsEl.appendChild(dateEl);
+
+  // Display the url of the news page
+  var urlEl = document.createElement('a');
+  urlEl.setAttribute('href', urlArticle)
+  urlEl.textContent = urlArticle;
+  newsEl.appendChild(urlEl);
+
+}
+
 
 //  Function to get data
 function getNews(data) {
-
   getArticles(data);
 
 }
 
 // Functionality to get users news data from the input league, team and date form api(userLeague, userTeam, userDate)
 var getApiNews = function (userLeague, userTeam, userDate) {
-  var apiUrl = 'https://content.guardianapis.com/search?q=' + userLeague + '&q=' + userTeam + '&from-date=' + userDate + '&api-key=' + apiNewsKey;
-  // var apiUrl ='https://content.guardianapis.com/search?q=champions%20league&q=juventus&from-date=2022-10-02&api-key=db4aab48-4635-49ff-a537-39a673481b78'
+  // var apiUrl = 'https://content.guardianapis.com/search?q=' + userLeague + '&q=' + userTeam + '&from-date=' + userDate + '&api-key=' + apiNewsKey;
+  var apiUrl = 'https://content.guardianapis.com/search?q=champions%20league&q=juventus&from-date=2022-10-02&api-key=db4aab48-4635-49ff-a537-39a673481b78'
 
   // Access open weather map resources across the network
   fetch(apiUrl)
@@ -59,4 +88,4 @@ var getApiNews = function (userLeague, userTeam, userDate) {
       alert('Unable to connect to The Guardian ');
     });
 };
-// getApiNews()
+getApiNews()
