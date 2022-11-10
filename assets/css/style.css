@@ -6,6 +6,8 @@
 body {
     background-color: rgb(14, 98, 209);
     align-content: center;
+    background-image: url("./Aswsome-soccer-Backgrounds.jpg");
+        
 }
 
 main {
@@ -17,7 +19,14 @@ main {
 header {
     padding: 60px;
     text-align: center;
-    background: #13293d75;
+    background: transparent;
+    color: rgb(255, 255, 255);
+}
+
+footer {
+    padding: 60px;
+    text-align: center;
+    background: transparent;
     color: rgb(255, 255, 255);
 }
 
@@ -26,10 +35,10 @@ header {
     border: 5px solid rgb(2, 2, 2);
     padding: 50px;
     margin: 100px;
-       display: flex;
-        align-items: center;
-        justify-content: space-around;
-        flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
 }
 
 .content-element { 
