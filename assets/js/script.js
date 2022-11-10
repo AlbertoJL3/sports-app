@@ -15,18 +15,26 @@ var apiNewsKey = "db4aab48-4635-49ff-a537-39a673481b78";
 //  Loop through articles
 function loopArticles(articles, newsCount) {
   for (let i = 0; i < newsCount + 1; i++) {
-    // Title of article
-    var titleArticle = articles[i].webTitle;
-    console.log(titleArticle);
-    // Url of article
-    var urlArticle = articles[i].webUrl;
-    console.log(urlArticle);
-    // Date published
-    var datePublished = moment(articles[i].webPublicationDate).format(
-      "MM/DD/YYYY"
-    );
+    if (i < articles.length) {
+      // Title of article
+      var titleArticle = articles[i].webTitle;
+      console.log(titleArticle);
+      // Url of article
+      var urlArticle = articles[i].webUrl;
+      console.log(urlArticle);
+      // Date published
+      var datePublished = moment(articles[i].webPublicationDate).format("MM/DD/YYYY");
 
-    displayNews(titleArticle, urlArticle, datePublished);
+      displayNews(titleArticle, urlArticle, datePublished);
+    }
+    else {
+      // Create a go back button
+      var goBackEl = document.createElement("button");
+      goBackEl.textContent = "Go Back";
+      goBackEl.setAttribute("class", "btn btn-secondary btn-lg btn-block go-back");
+      goBackEl.style.display = 'none';
+      newsContainer.appendChild(goBackEl);
+    }
   }
 }
 
@@ -45,27 +53,29 @@ function getArticles(data) {
   text-align: center;
   padding: 5px 0;
 `;
-
   newsContainer.appendChild(headerNewsEl);
-
   loopArticles(articles, newsCount);
+
   // See more element
   var seeMoreEl = document.createElement("button");
   seeMoreEl.textContent = "See more";
-  seeMoreEl.setAttribute(
-    "class",
-    "btn btn-secondary btn-lg btn-block see-more"
-  );
+  seeMoreEl.setAttribute("class", "btn btn-secondary btn-lg btn-block see-more");
+  newsContainer.appendChild(seeMoreEl);
+   
+  // Add event to all articles
   seeMoreEl.addEventListener("click", function (e) {
     e.preventDefault();
-
     seeMoreEl.style.display = "none";
     newsCount = articles.length;
     loopArticles(articles, newsCount);
-  });
 
-  newsContainer.appendChild(seeMoreEl);
+    // Display button go back 
+    document.querySelector(".go-back").style.display = "block";
+    // Hide matches container
+    // document.querySelector("#matchbox").style.display = "none";
+  });
 }
+
 
 // Functionality to display news
 function displayNews(titleArticle, urlArticle, datePublished) {
@@ -99,14 +109,15 @@ function displayNews(titleArticle, urlArticle, datePublished) {
   text-align: right;
  `;
   newsEl.appendChild(dateEl);
-
   newsContainer.appendChild(newsEl);
 }
+
 
 //  Function to get data
 function getNews(data) {
   getArticles(data);
 }
+
 
 // Functionality to get users news data from the input league, team and date form api(userLeague, userTeam, userDate)
 var getApiNews = function (userLeague, userTeam, userDate) {

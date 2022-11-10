@@ -3,3 +3,7 @@ margin: 50px;
 border: solid 2px black;
 border-radius: 10px;
 }
+
+.hidden {
+    display: none;
+}
