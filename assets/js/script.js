@@ -5,21 +5,21 @@ $(function () {
     changeYear: true,
   });
 });
-
+var searchBtnEl = $('#searchbtn')
 //get leagueID and set as var
 //key1: cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11
 //key2: 26eb315a46msh99f692d58ae8f5fp13ad5cjsn2bd8a4ffb6e6
 const options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': 'cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11',
+    'X-RapidAPI-Key': '26eb315a46msh99f692d58ae8f5fp13ad5cjsn2bd8a4ffb6e6',
     'X-RapidAPI-Host': 'footapi7.p.rapidapi.com'
   }
 };
 
 //user inputs
 var date = '06/11/2022';
-var leagueID = 2;
+var leagueID = 1;
 var eventsData = {};
 
 function getMatchData() {
@@ -28,31 +28,49 @@ function getMatchData() {
       return response.json();
     })
     .then(function (data) {
-      for (i = 0; i < 100; i++) {
-        //saves matches of desired league for the given date
-        if (data.events[i].tournament.id == leagueID) {
-          eventsData[i] = data.events[i]
-        }
-      }
-
-      localStorage.setItem('rawData', JSON.stringify(data))
-      //saves premier league data
-      if (leagueID = 1) {
-        localStorage.setItem('PremierLeagueData', JSON.stringify(eventsData))
-      } //saves league2data
-      else if (leagueID = 2) {
-        localStorage.setItem('League2Data', JSON.stringify(eventsData))
-      } //saves league3data
-      console.log(eventsData)
+      localStorage.setItem('rawData', data)
+      getmatchScore(0)
     })
 }
 
+var premierleague = {}
+
+//if the match is in the future: 
+//need to get home team name, away team name and date of event. - no score!
+function getMatchSchedule() {
+  fetch('https://footapi7.p.rapidapi.com/api/matches/' + date, options)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data)
+
+      //this is where we need to input the data from the dropdown "select your league"
+      getLeagueGames("Premier League", data)
+      //so get leagueInputBoxEl.val() and run the function with that when "search" is clicked
+    })
+}
+
+
+function getLeagueGames(league, data) {
+  for (i = 0; i < 50; i++) {
+    if (data.events[i].tournament.name == league) {
+      premierleague[i] = data.events[i]
+      localStorage.setItem('premierleaguegames', JSON.stringify(premierleague))
+    }
+  }
+  getMatchScore(1)
+}
+
+
+
+
+
 //if status == "notstarted" use future game function
 //gets match scores from past games given an input of match number; 
-function getMatchScore(game) {
-  // if the match is in the past: 
-  //need to get home team name, home team score//away team name, away team score
-  var storedData = JSON.parse(localStorage.getItem('leagueData'))
+function getMatchScore(league, game) {
+  var storedData = JSON.parse(localStorage.getItem(league))
+
   var MatchResults = {
     finalScoreHome: storedData[game].homeScore.current,
     finalScoreAway: storedData[game].awayScore.current,
@@ -60,51 +78,38 @@ function getMatchScore(game) {
     AwayTeamName: storedData[game].awayTeam.name,
     MatchDate: moment.unix(storedData[game].time.currentPeriodStartTimestamp).format("MMMM Do YYYY hh:mm a")
   }
-  console.log(MatchResults)
+  appendResults(MatchResults.HomeTeamName, MatchResults.finalScoreHome, MatchResults.AwayTeamName, MatchResults.finalScoreAway, MatchResults.MatchDate)
 }
 
+function appendResults(team1name, team1score, team2name, team2score, date) {
+  var matchboxEl = $('#matchbox')
 
+  var teamspEl = document.createElement('p')
 
-//if the match is in the future: 
-//need to get home team name, away team name and date of event. - no score!
-function getMatchSchedule(game) {
-  fetch('https://footapi7.p.rapidapi.com/api/matches/' + date, options)
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
-      console.log(data)
-    })
+  var hometeamEl = document.createElement('span');
+  hometeamEl.textContent = team1name + ': '
+  teamspEl.appendChild(hometeamEl)
+
+  var homeScoreEl = document.createElement('span')
+  homeScoreEl.textContent = team1score + "-"
+  teamspEl.appendChild(homeScoreEl)
+
+  var awayteamEl = document.createElement('span')
+  awayteamEl.textContent = team2score + " :"
+  teamspEl.appendChild(awayteamEl)
+
+  var awayScoreEl = document.createElement('span')
+  awayScoreEl.textContent = team2name
+  teamspEl.appendChild(awayScoreEl)
+
+  var matchDate = document.createElement('p')
+  matchDate.textContent = date
+  teamspEl.appendChild(matchDate)
+  matchboxEl.append(teamspEl)
 }
-
-
 
 //console log test -- just want to test this on all the games for now. 
-function run() {
-  for (i = 0; i < 9; i++) {
-    getMatchScore(i)
-  }
-}
 
-run()
-
-// function appendResults(team1name, team1score, team2name, team2score) {
-//   var matchboxEl = $('.matches');
-
-//   var teamspEl = document.createElement('p')
-//   var hometeamEl = document.createElement('span').innerText(data.HomeTeamName)
- 
-//   var homeScoreEl = document.createElement('span')
-//   homeScoreEl.text(data.finalScoreHome)
-
-//   var awayteamEl = document.createElement('span')
-//   hometeamEl.text(data.AwayTeamName)
-//   var awayScoreEl = document.createElement('span')
-//   awayScoreEl.text(data.finalScoreAway)
-
-
-//   var teamsboxEl = document.createElement('div').addClass('teams').append(teamspEl).append(hometeamEl).append(homeScoreEl).append(awayScoreEl).append(awayteamEl)
- 
-//     matchboxEl.append(teamsboxEl)
-
-// }
+searchBtnEl.on('click', function() {
+  getMatchScore('premierleaguegames', 1)
+})
