@@ -14,10 +14,10 @@ var matchboxesEl = $('#matchbox')
 
 var date = '06/11/2022';
 var league = "Premier League";
-var team = "arsenal";
+var team = "";
 
 searchBtnEl.on('click', function () {
-  getMatchData(league, "arsenal", date)
+  getMatchData(league, team, date)
 })
 
 
@@ -44,7 +44,7 @@ function getMatchData(league, team, date) {
       //gets every game in that league or team
       console.log(data)
       getLeagueGames(league, team, data)
-     
+
       //saves raw data (all matches for a given date) locally
     })
 }
@@ -55,35 +55,42 @@ function getLeagueGames(league, team, data) {
   //for the first 100 games of the data set, save all the league games
   for (i = 0; i < 100; i++) {
     if (data.events[i].tournament.name == league) {
-      leagueGames[i] = data.events[i]
+      leagueGames[i] = data.events[i] //turn into object and save needed parameters. 
     }
   }
   localStorage.setItem(league, JSON.stringify(leagueGames))
-  getTeamGames(league, team, leagueGames)
+  if (team !== '') {
+    getTeamGames(league, team, leagueGames)
+  } else {
+    getMatchScore(JSON.parse(localStorage.getItem(league)))
+  }
 }
 
 //for a given league, team and list of games, check every game for the team name and if it matches, get its score if not then display all other league games
 function getTeamGames(league, team, data) {
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < Object.keys(data).length; i++) {
+    console.log(data[i].awayTeam.slug)
+    console.log(data[i].homeTeam.slug)
     //if away or home team is my team, save the game, log it, save it locally, and get its score
     if (data[i].awayTeam.slug == team) {
       console.log(data[i])
       localStorage.setItem(team, JSON.stringify(data[i]))
-      getMatchScore(data[i])
+
     } else if (data[i].homeTeam.slug == team) {
       console.log(data[i])
       localStorage.setItem(team, JSON.stringify(data[i]))
-      getMatchScore(data[i])
-    } else {
-      getMatchScore(JSON.parse(localStorage.getItem(league)))
-    }
+
+    } //else {
+    //   
+    // }
   }
+  var chosenTeam = JSON.parse(localStorage.getItem(team))
+  getMatchScore2(chosenTeam)
 }
 
 //if status == "notstarted" use future game function
 //gets match scores from past games given an input of match number; 
 function getMatchScore(game) {
-  console.log(game)
   for (i = 0; i < Object.keys(game).length; i++) {
     var MatchResults = {
       //gets  score for home team
@@ -101,6 +108,23 @@ function getMatchScore(game) {
   }
 }
 
+function getMatchScore2(game) {
+  var MatchResults = {
+    //gets  score for home team
+    finalScoreHome: game.homeScore.current,
+    //gets score for away team
+    finalScoreAway: game.awayScore.current,
+    //gets name of home team
+    HomeTeamName: game.homeTeam.name,
+    //gets name of 
+    AwayTeamName: game.awayTeam.name,
+    //formats date
+    MatchDate: moment.unix(game.time.currentPeriodStartTimestamp).format("MMMM Do YYYY hh:mm a")
+  }
+  appendResults(MatchResults.HomeTeamName, MatchResults.finalScoreHome, MatchResults.AwayTeamName, MatchResults.finalScoreAway, MatchResults.MatchDate)
+}
+
+
 
 function appendResults(team1name, team1score, team2name, team2score, date) {
 
@@ -109,7 +133,6 @@ function appendResults(team1name, team1score, team2name, team2score, date) {
   width: 35vw;
   border: 1px solid black;
   padding: 0 2%;
-  margin-left: 2%;
   `;
 
   var teamspEl = document.createElement('p')
