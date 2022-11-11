@@ -1,4 +1,3 @@
-
 // Datepicker widget
 $(function () {
   $("#datepicker").datepicker({
@@ -15,25 +14,21 @@ var contentDiv = document.querySelector(".content");
 var searchBtn = document.querySelector("#search-btn");
 var formsEl = document.querySelectorAll(".userform");
 
-// variables for news divs 
-// var newsDiv = document.createElement('div');
-// newsDiv.id = 'news';
-// var newsHeadline = document.createElement('p');
-// newsHeadline.id = 'headline-text';
 
 searchBtn.addEventListener("click", () => {
-
-  // adding if statement to hide welcome-note
+    
+    // adding if statement to hide welcome-note
   if (welcomeText.style.display === 'none') {
     welcomeText.style.display = 'block';
-  }
-  else {
+  } 
+  else{
     welcomeText.style.display = 'none';
   }
-  contentDiv.setAttribute("style", "display: flex; padding: 5px;");
-  for (var i = 0; i < formsEl.length; i++) {
-    formsEl[i].setAttribute("style", "margin: 0 1px;");
-  }
-  searchBtn.setAttribute("style", "margin: 0 1px;");
+  contentDiv.classList.add("content-element");
+  contentDiv.classList.remove("userform", "content");
+for (var i = 0; i < formsEl.length; i++) {
+  formsEl[i].setAttribute("style", "margin: 0 1px;");
+}
+searchBtn.setAttribute("style", "margin: 0 1px;");
 
 })
