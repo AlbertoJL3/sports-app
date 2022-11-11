@@ -7,7 +7,7 @@ $(function () {
 });
 var searchBtnEl = $('#searchbtn')
 var matchboxesEl = $('#matchbox')
-
+var j = 0;
 //get leagueID and set as var
 //key1: cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11
 //key2: 26eb315a46msh99f692d58ae8f5fp13ad5cjsn2bd8a4ffb6e6
@@ -24,7 +24,7 @@ searchBtnEl.on('click', function () {
 const options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': '58d67597d5msh7c09f99318a3545p1cb402jsn28ccbba07ce9',
+    'X-RapidAPI-Key': 'cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11',
     'X-RapidAPI-Host': 'footapi7.p.rapidapi.com'
   }
 };
@@ -55,31 +55,42 @@ function getLeagueGames(league, team, data) {
   //for the first 100 games of the data set, save all the league games
   for (i = 0; i < 100; i++) {
     if (data.events[i].tournament.name == league) {
-      leagueGames[i] = data.events[i] //turn into object and save needed parameters. 
+      leagueGames[j] = {
+        finalScoreHome: data.events[i].homeScore.current,
+        //gets score for away team
+        finalScoreAway: data.events[i].awayScore.current,
+        //gets name of home team
+        HomeTeamName: data.events[i].homeTeam.name,
+        //gets name of 
+        AwayTeamName: data.events[i].awayTeam.name,
+        //formats date
+        MatchDate: moment.unix(data.events[i].time.currentPeriodStartTimestamp).format("MMMM Do YYYY hh:mm a")
+      } //turn into object and save needed parameters. 
+      j = j+1;
     }
   }
+
   localStorage.setItem(league, JSON.stringify(leagueGames))
   if (team !== '') {
     getTeamGames(league, team, leagueGames)
   } else {
     getMatchScore(JSON.parse(localStorage.getItem(league)))
   }
+
 }
 
 //for a given league, team and list of games, check every game for the team name and if it matches, get its score if not then display all other league games
 function getTeamGames(league, team, data) {
   for (i = 0; i < Object.keys(data).length; i++) {
-    console.log(data[i].awayTeam.slug)
-    console.log(data[i].homeTeam.slug)
+    console.log(data[i].AwayTeamName)
+    console.log(data[i].HomeTeamName)
     //if away or home team is my team, save the game, log it, save it locally, and get its score
-    if (data[i].awayTeam.slug == team) {
-      console.log(data[i])
-      localStorage.setItem(team, JSON.stringify(data[i]))
+    if (data[i].HomeTeamName == team) {
+      getMatchScore2(data[i])
 
-    } else if (data[i].homeTeam.slug == team) {
+    } else if (data[i].AwayTeamName == team) {
       console.log(data[i])
-      localStorage.setItem(team, JSON.stringify(data[i]))
-
+      getMatchScore2(data[i])
     } //else {
     //   
     // }
@@ -94,32 +105,33 @@ function getMatchScore(game) {
   for (i = 0; i < Object.keys(game).length; i++) {
     var MatchResults = {
       //gets  score for home team
-      finalScoreHome: game[i].homeScore.current,
+      finalScoreHome: game[i].finalScoreHome,
       //gets score for away team
-      finalScoreAway: game[i].awayScore.current,
+      finalScoreAway: game[i].finalScoreAway,
       //gets name of home team
-      HomeTeamName: game[i].homeTeam.name,
+      HomeTeamName: game[i].HomeTeamName,
       //gets name of 
-      AwayTeamName: game[i].awayTeam.name,
+      AwayTeamName: game[i].AwayTeamName,
       //formats date
-      MatchDate: moment.unix(game[i].time.currentPeriodStartTimestamp).format("MMMM Do YYYY hh:mm a")
+      MatchDate: game[i].MatchDate
     }
     appendResults(MatchResults.HomeTeamName, MatchResults.finalScoreHome, MatchResults.AwayTeamName, MatchResults.finalScoreAway, MatchResults.MatchDate)
   }
 }
 
 function getMatchScore2(game) {
+  console.log(game)
   var MatchResults = {
     //gets  score for home team
-    finalScoreHome: game.homeScore.current,
+    finalScoreHome: game.finalScoreHome,
     //gets score for away team
-    finalScoreAway: game.awayScore.current,
+    finalScoreAway: game.finalScoreAway,
     //gets name of home team
-    HomeTeamName: game.homeTeam.name,
+    HomeTeamName: game.HomeTeamName,
     //gets name of 
-    AwayTeamName: game.awayTeam.name,
+    AwayTeamName: game.AwayTeamName,
     //formats date
-    MatchDate: moment.unix(game.time.currentPeriodStartTimestamp).format("MMMM Do YYYY hh:mm a")
+    MatchDate: game.MatchDate
   }
   appendResults(MatchResults.HomeTeamName, MatchResults.finalScoreHome, MatchResults.AwayTeamName, MatchResults.finalScoreAway, MatchResults.MatchDate)
 }
