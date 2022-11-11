@@ -1,3 +1,4 @@
+
 // Datepicker widget
 $(function () {
   $("#datepicker").datepicker({
@@ -21,18 +22,18 @@ var formsEl = document.querySelectorAll(".userform");
 // newsHeadline.id = 'headline-text';
 
 searchBtn.addEventListener("click", () => {
-    
-    // adding if statement to hide welcome-note
+
+  // adding if statement to hide welcome-note
   if (welcomeText.style.display === 'none') {
     welcomeText.style.display = 'block';
-  } 
-  else{
+  }
+  else {
     welcomeText.style.display = 'none';
   }
   contentDiv.setAttribute("style", "display: flex; padding: 5px;");
-for (var i = 0; i < formsEl.length; i++) {
-  formsEl[i].setAttribute("style", "margin: 0 1px;");
-}
-searchBtn.setAttribute("style", "margin: 0 1px;");
+  for (var i = 0; i < formsEl.length; i++) {
+    formsEl[i].setAttribute("style", "margin: 0 1px;");
+  }
+  searchBtn.setAttribute("style", "margin: 0 1px;");
 
 })
