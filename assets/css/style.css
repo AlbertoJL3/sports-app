@@ -47,6 +47,10 @@ footer {
 
 
 }
+.content-element{
+    display: flex;
+    padding: 5px; 
+}
 
 /* Cards are split into two columns at 992px or smaller */
 @media screen and (max-width: 992px) {
