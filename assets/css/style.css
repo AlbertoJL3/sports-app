@@ -28,6 +28,7 @@ footer {
     text-align: center;
     background: transparent;
     color: rgb(255, 255, 255);
+    font-size: 18px;
 }
 
 .content {
@@ -41,7 +42,7 @@ footer {
     flex-direction: column;
 }
 
-.content-element { 
+.userform { 
     margin-bottom: 20px;
 
 
