@@ -5,15 +5,17 @@ $(function () {
     changeYear: true,
   });
 });
-var searchBtnEl = $('#searchbtn')
+
+var searchBtnEl = $('#search-btn')
 var matchboxesEl = $('#matchbox')
 var j = 0;
+
 //get leagueID and set as var
 //key1: cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11
 //key2: 26eb315a46msh99f692d58ae8f5fp13ad5cjsn2bd8a4ffb6e6
 
-var date = '06/11/2022';
-var league = "Premier League";
+var date = '13/11/2022';
+var league = "Bundesliga";
 var team = "";
 
 searchBtnEl.on('click', function () {
@@ -44,32 +46,52 @@ function getMatchData(league, team, date) {
       //gets every game in that league or team
       console.log(data)
       getLeagueGames(league, team, data)
-
       //saves raw data (all matches for a given date) locally
     })
 }
 
 //gets every game for the inputted league and team if a team is chosen
 function getLeagueGames(league, team, data) {
-
-  //for the first 100 games of the data set, save all the league games
-  for (i = 0; i < 100; i++) {
-    if (data.events[i].tournament.name == league) {
-      leagueGames[j] = {
-        finalScoreHome: data.events[i].homeScore.current,
-        //gets score for away team
-        finalScoreAway: data.events[i].awayScore.current,
-        //gets name of home team
-        HomeTeamName: data.events[i].homeTeam.name,
-        //gets name of 
-        AwayTeamName: data.events[i].awayTeam.name,
-        //formats date
-        MatchDate: moment.unix(data.events[i].time.currentPeriodStartTimestamp).format("MMMM Do YYYY hh:mm a")
-      } //turn into object and save needed parameters. 
-      j = j+1;
+  //for the first 100 games of the data set, save all the league games\
+  //if the chosen date is in the future, display match start time
+  if (moment(date).format('L hh:mm') > moment().format('L hh:mm')) {
+    console.log('is in future')
+    for (i = 0; i < 100; i++) {
+      if (data.events[i].tournament.name == league) {
+        leagueGames[j] = {
+          finalScoreHome: 0,
+          //gets score for away team
+          finalScoreAway: 0,
+          //gets name of home team
+          HomeTeamName: data.events[i].homeTeam.name,
+          //gets name of 
+          AwayTeamName: data.events[i].awayTeam.name,
+          //formats date
+          MatchDate: moment.unix(data.events[i].startTimestamp).format("L hh:mm a")
+        } //turn into object and save needed parameters.  
+        j = j+1;
+      }
+    }
+  } else {
+    console.log('is in past')
+    for (i = 0; i < 100; i++) {
+      if (data.events[i].tournament.name == league) {
+        leagueGames[j] = {
+          finalScoreHome: data.events[i].homeScore.current,
+          //gets score for away team
+          finalScoreAway: data.events[i].awayScore.current,
+          //gets name of home team
+          HomeTeamName: data.events[i].homeTeam.name,
+          //gets name of 
+          AwayTeamName: data.events[i].awayTeam.name,
+          //formats date
+          MatchDate: moment.unix(data.events[i].time.currentPeriodStartTimestamp).format("L hh:mm a")
+        } //turn into object and save needed parameters.  
+        j = j+1;
+      }
     }
   }
-
+  
   localStorage.setItem(league, JSON.stringify(leagueGames))
   if (team !== '') {
     getTeamGames(league, team, leagueGames)
@@ -82,17 +104,14 @@ function getLeagueGames(league, team, data) {
 //for a given league, team and list of games, check every game for the team name and if it matches, get its score if not then display all other league games
 function getTeamGames(league, team, data) {
   for (i = 0; i < Object.keys(data).length; i++) {
-    console.log(data[i].AwayTeamName)
-    console.log(data[i].HomeTeamName)
     //if away or home team is my team, save the game, log it, save it locally, and get its score
     if (data[i].HomeTeamName == team) {
       getMatchScore2(data[i])
 
     } else if (data[i].AwayTeamName == team) {
-      console.log(data[i])
       getMatchScore2(data[i])
     } //else {
-    //   
+    //  
     // }
   }
   var chosenTeam = JSON.parse(localStorage.getItem(team))
@@ -120,7 +139,6 @@ function getMatchScore(game) {
 }
 
 function getMatchScore2(game) {
-  console.log(game)
   var MatchResults = {
     //gets  score for home team
     finalScoreHome: game.finalScoreHome,
@@ -142,9 +160,12 @@ function appendResults(team1name, team1score, team2name, team2score, date) {
 
   var matchboxEl = document.createElement('div')
   matchboxEl.style.cssText = `
-  width: 35vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 250px;
   border: 1px solid black;
-  padding: 0 2%;
+  padding: 1%;
   `;
 
   var teamspEl = document.createElement('p')
