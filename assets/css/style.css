@@ -1,5 +1,75 @@
+
 .news-container{
 margin: 50px;
 border: solid 2px black;
 border-radius: 10px;
 }
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: rgb(14, 98, 209);
+    align-content: center;
+    background-image: url("./Aswsome-soccer-Backgrounds.jpg");
+        
+}
+
+main {
+    justify-content: center;
+    align-content: center;
+    display: flex;
+}
+
+header {
+    padding: 60px;
+    text-align: center;
+    background: transparent;
+    color: rgb(255, 255, 255);
+}
+
+footer {
+    padding: 60px;
+    text-align: center;
+    background: transparent;
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+}
+
+.content {
+    width: 500px;
+    border: 5px solid rgb(2, 2, 2);
+    padding: 50px;
+    margin: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.userform { 
+    margin-bottom: 20px;
+
+
+}
+.content-element{
+    display: flex;
+    padding: 5px; 
+}
+
+/* Cards are split into two columns at 992px or smaller */
+@media screen and (max-width: 992px) {
+    .card {
+        width: 50%;
+    }
+}
+
+/* Cards are stacked on top of each other at 768px or smaller */
+@media screen and (max-width: 768px) {
+    .card {
+        width: 100%;
+    }
+}
+
