@@ -25,7 +25,6 @@ function getArticles(data) {
   border-radius: 10px 10px 0 0;
 `;
   newsContainer.appendChild(headerNewsEl);
-
   loopArticles(articles, newsCount);
 
   // See more element
@@ -42,7 +41,7 @@ function getArticles(data) {
     loopArticles(articles, newsCount);
     goBackEl.style.display = "block";
     // Hide matches container
-    // document.querySelector("#matchbox").style.display = "none";
+    document.querySelector("#matchbox").style.display = "none";
   });
 
   // Add event to see only 3 articles
@@ -57,7 +56,7 @@ function getArticles(data) {
       removeEL.style.display = "none";
     }
     // Show matches container
-    // document.querySelector("#matchbox").style.display = "block";
+    document.querySelector("#matchbox").style.display = "block";
   });
 }
 
@@ -66,6 +65,11 @@ function getArticles(data) {
 //  Function to get data
 function getNews(data) {
   getArticles(data);
+  newsContainer.style.cssText = `
+  margin: 50px;
+  border: solid 2px black;
+  border-radius: 10px;
+`;
 }
 
 
@@ -93,7 +97,7 @@ var getApiNews = function (userLeague, userTeam, userDate) {
       alert("Unable to connect to The Guardian ");
     });
 };
-getApiNews();
+
 
 // adding function to search button   
 
@@ -120,6 +124,7 @@ for (var i = 0; i < formsEl.length; i++) {
 }
 searchBtn.setAttribute("style", "margin: 0 1px;");
 
+getApiNews();
 })
 
 var searchBtnEl = $('#search-btn')
