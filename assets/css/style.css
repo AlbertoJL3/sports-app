@@ -57,6 +57,7 @@ footer {
 .content-element{
     display: flex;
     padding: 5px; 
+    justify-content: column;
 }
 
 /* Cards are split into two columns at 992px or smaller */
