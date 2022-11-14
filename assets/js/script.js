@@ -7,6 +7,105 @@ $(function () {
 });
 
 
+// variables
+var welcomeText = document.querySelector("#welcome-note");
+var contentDiv = document.querySelector(".content");
+var searchBtn = document.querySelector("#search-btn");
+var formsEl = document.querySelectorAll(".userform");
+var mainEl = document.querySelector("main")
+var resultsEl = document.querySelector(".results")
+
+
+searchBtn.addEventListener("click", () => {
+
+  welcomeText.style.display = 'none';
+
+  contentDiv.classList.add("content-element");
+  contentDiv.classList.remove("userform", "content");
+  for (var i = 0; i < formsEl.length; i++) {
+    formsEl[i].setAttribute("style", "margin: 0 1px;");
+  }
+  searchBtn.setAttribute("style", "margin: 0 1px;");
+  getApiNews(userLeague, userTeam, userDate);
+
+
+  // Display search box, results in column
+  mainEl.setAttribute("style", "display:flex; flex-direction: column;");
+  // Give Space for news box and matchbox 
+  resultsEl.classList.add("col-lg-12")
+  newsContainer.classList.add("col-lg-6")
+  matchboxesEl.classList.add("col-lg-6")
+
+})
+
+
+// Declare API news key
+var newsCount = 3;
+var newsContainer = document.querySelector(".news-container");
+// var apiNewsKey = '15a5e83-9800-4550-bb67-90aa5baea803';
+var apiNewsKey = "db4aab48-4635-49ff-a537-39a673481b78";
+
+// Create a go back button
+var goBackEl = document.createElement("button");
+goBackEl.textContent = "Go Back";
+goBackEl.setAttribute("class", "btn btn-secondary btn-lg btn-block go-back");
+goBackEl.style.display = 'none';
+
+// Functionality to display news
+function displayNews(titleArticle, urlArticle, datePublished) {
+  // Display Title
+  var newsEl = document.createElement("div");
+  newsEl.style.cssText = `
+  border:solid 2px black;
+  text-align: center;
+  margin-top: 10px;
+  background-color: rgba(255,255,255,0.8);
+ `;
+  var titleEl = document.createElement("h4");
+  titleEl.textContent = titleArticle;
+  newsEl.appendChild(titleEl);
+
+  // Display the url of the news page
+  var urlEl = document.createElement("a");
+  urlEl.setAttribute("href", urlArticle);
+  urlEl.style.cssText = `
+  color: green;
+  padding-right: 10px;
+ `;
+  urlEl.textContent = urlArticle;
+  newsEl.appendChild(urlEl);
+
+  // Display parse date time ago for the published date
+  var dateEl = document.createElement("p");
+  dateEl.textContent = moment(datePublished).fromNow();
+  dateEl.style.cssText = `
+  color: grey;
+  padding-right: 10px;
+  text-align: right;
+ `;
+  newsEl.appendChild(dateEl);
+  newsContainer.appendChild(newsEl);
+}
+
+
+//  Loop through articles
+function loopArticles(articles, newsCount) {
+  for (let i = 0; i < newsCount + 1; i++) {
+    if (i < articles.length) {
+      // Title of article
+      var titleArticle = articles[i].webTitle;
+      // Url of article
+      var urlArticle = articles[i].webUrl;
+      // Date published
+      var datePublished = moment(articles[i].webPublicationDate).format("MM/DD/YYYY");
+
+      displayNews(titleArticle, urlArticle, datePublished);
+    }
+    else {
+      newsContainer.appendChild(goBackEl);
+    }
+  }
+}
 
 // Functionality to get each articles title, url, date published
 function getArticles(data) {
@@ -17,7 +116,7 @@ function getArticles(data) {
   var headerNewsEl = document.createElement("h2");
   headerNewsEl.textContent = "Soccer News";
   headerNewsEl.style.cssText = `
-  background-color: darkblue;
+  background-color: rgb(65, 64, 64);
   color: white;
   font-size: 50px;
   text-align: center;
@@ -25,7 +124,6 @@ function getArticles(data) {
   border-radius: 10px 10px 0 0;
 `;
   newsContainer.appendChild(headerNewsEl);
-
   loopArticles(articles, newsCount);
 
   // See more element
@@ -42,7 +140,7 @@ function getArticles(data) {
     loopArticles(articles, newsCount);
     goBackEl.style.display = "block";
     // Hide matches container
-    // document.querySelector("#matchbox").style.display = "none";
+    document.querySelector("#matchbox").style.display = "none";
   });
 
   // Add event to see only 3 articles
@@ -57,23 +155,31 @@ function getArticles(data) {
       removeEL.style.display = "none";
     }
     // Show matches container
-    // document.querySelector("#matchbox").style.display = "block";
+    document.querySelector("#matchbox").style.display = "block";
   });
 }
-
-
 
 //  Function to get data
 function getNews(data) {
   getArticles(data);
+  newsContainer.style.cssText = `
+  display: flex;
+  flex-direction: column;
+  margin: 50px;
+  border: solid 2px black;
+  border-radius: 10px;
+  padding: 0;
+  `;
 }
+var userLeague= "champions%20league"
+var userTeam ="A.C.%20Milan"
+var userDate ="2022-10-02"
 
 
 // Functionality to get users news data from the input league, team and date form api(userLeague, userTeam, userDate)
 var getApiNews = function (userLeague, userTeam, userDate) {
-  // var apiUrl = 'https://content.guardianapis.com/search?q=' + userLeague + '&q=' + userTeam + '&from-date=' + userDate + '&api-key=' + apiNewsKey;
-  var apiUrl = "https://content.guardianapis.com/search?q=champions%20league&q=juventus&from-date=2022-10-02&api-key=db4aab48-4635-49ff-a537-39a673481b78";
-
+  var apiUrl = 'https://content.guardianapis.com/search?q=' + userLeague + '&q=' + userTeam + '&from-date=' + userDate + '&api-key=' + apiNewsKey;
+  
   // Access open weather map resources across the network
   fetch(apiUrl)
     .then(function (response) {
@@ -93,34 +199,8 @@ var getApiNews = function (userLeague, userTeam, userDate) {
       alert("Unable to connect to The Guardian ");
     });
 };
-getApiNews();
-
-// adding function to search button   
-
-// variables
-var welcomeText = document.querySelector("#welcome-note");
-var contentDiv = document.querySelector(".content");
-var searchBtn = document.querySelector("#search-btn");
-var formsEl = document.querySelectorAll(".userform");
 
 
-searchBtn.addEventListener("click", () => {
-    
-    // adding if statement to hide welcome-note
-  if (welcomeText.style.display === 'none') {
-    welcomeText.style.display = 'block';
-  } 
-  else{
-    welcomeText.style.display = 'none';
-  }
-  contentDiv.classList.add("content-element");
-  contentDiv.classList.remove("userform", "content");
-for (var i = 0; i < formsEl.length; i++) {
-  formsEl[i].setAttribute("style", "margin: 0 1px;");
-}
-searchBtn.setAttribute("style", "margin: 0 1px;");
-
-})
 
 var searchBtnEl = $('#search-btn')
 var matchboxesEl = $('#matchbox')
@@ -142,7 +222,7 @@ searchBtnEl.on('click', function () {
 const options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': 'cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11',
+    'X-RapidAPI-Key': '26eb315a46msh99f692d58ae8f5fp13ad5cjsn2bd8a4ffb6e6',
     'X-RapidAPI-Host': 'footapi7.p.rapidapi.com'
   }
 };
@@ -185,7 +265,7 @@ function getLeagueGames(league, team, data) {
           //formats date
           MatchDate: moment.unix(data.events[i].startTimestamp).format("L hh:mm a")
         } //turn into object and save needed parameters.  
-        j = j+1;
+        j = j + 1;
       }
     }
   } else {
@@ -203,11 +283,11 @@ function getLeagueGames(league, team, data) {
           //formats date
           MatchDate: moment.unix(data.events[i].time.currentPeriodStartTimestamp).format("L hh:mm a")
         } //turn into object and save needed parameters.  
-        j = j+1;
+        j = j + 1;
       }
     }
   }
-  
+
   localStorage.setItem(league, JSON.stringify(leagueGames))
   if (team !== '') {
     getTeamGames(league, team, leagueGames)
@@ -282,6 +362,7 @@ function appendResults(team1name, team1score, team2name, team2score, date) {
   width: 250px;
   border: 1px solid black;
   padding: 1%;
+  background-color: rgba(255,255,255,0.8);
   `;
 
   var teamspEl = document.createElement('p')
@@ -308,73 +389,4 @@ function appendResults(team1name, team1score, team2name, team2score, date) {
   teamspEl.appendChild(matchDate)
   matchboxEl.append(teamspEl)
   matchboxesEl.append(matchboxEl)
-}
-// Declare API news key
-var newsCount = 3;
-var newsContainer = document.querySelector(".news-container");
-// var apiNewsKey = '15a5e83-9800-4550-bb67-90aa5baea803';
-var apiNewsKey = "db4aab48-4635-49ff-a537-39a673481b78";
-
-// Create a go back button
-var goBackEl = document.createElement("button");
-goBackEl.textContent = "Go Back";
-goBackEl.setAttribute("class", "btn btn-secondary btn-lg btn-block go-back");
-goBackEl.style.display = 'none';
-
-// Functionality to display news
-function displayNews(titleArticle, urlArticle, datePublished) {
-  // Display Title
-  var newsEl = document.createElement("div");
-  newsEl.style.cssText = `
-  border:solid 2px black;
-  text-align: center;
-  margin-top: 10px;
- `;
-  var titleEl = document.createElement("h4");
-  titleEl.textContent = titleArticle;
-  newsEl.appendChild(titleEl);
-
-  // Display the url of the news page
-  var urlEl = document.createElement("a");
-  urlEl.setAttribute("href", urlArticle);
-  urlEl.style.cssText = `
-  color: green;
-  padding-right: 10px;
- `;
-  urlEl.textContent = urlArticle;
-  newsEl.appendChild(urlEl);
-
-  // Display parse date time ago for the published date
-  var dateEl = document.createElement("p");
-  dateEl.textContent = moment(datePublished).fromNow();
-  dateEl.style.cssText = `
-  color: grey;
-  padding-right: 10px;
-  text-align: right;
- `;
-  newsEl.appendChild(dateEl);
-  newsContainer.appendChild(newsEl);
-}
-
-
-//  Loop through articles
-function loopArticles(articles, newsCount) {
-  for (let i = 0; i < newsCount + 1; i++) {
-    if (i < articles.length) {
-      // Title of article
-      var titleArticle = articles[i].webTitle;
-      console.log(titleArticle);
-      // Url of article
-      var urlArticle = articles[i].webUrl;
-      console.log(urlArticle);
-      // Date published
-      var datePublished = moment(articles[i].webPublicationDate).format("MM/DD/YYYY");
-
-      displayNews(titleArticle, urlArticle, datePublished);
-    }
-    else {
-      newsContainer.appendChild(goBackEl);
-
-    }
-  }
 }
