@@ -15,15 +15,55 @@ var searchBtn = document.querySelector("#search-btn");
 var formsEl = document.querySelectorAll(".userform");
 var mainEl = document.querySelector("main")
 var resultsEl = document.querySelector(".results")
-// Variables of last inputs 
-var lastUserLeague = ""
-var lastUserTeam = ""
-var lastUserDate = ""
 
-searchBtn.addEventListener("click", () => {
+var searchBtnEl = $('#search-btn')
+var matchboxesEl = $('#matchbox')
+var j = 0;
 
+searchBtnEl.on('click', function () {
+  //Get User Input Values
+  var userLeague = $('#leagueList').val()
+  var userTeam = $('#teamsList').val()
+  var userDate = moment($('#datepicker').val()).format("DD/MM/YYYY");
+ 
+  var newsLeague = userLeague.replace(" ", "%20")
+  var newsTeam = userTeam.replace(" ", "%20")
+  var newsDate = moment(userDate).format('YYYY-MM-DD')
+
+  
+  // Comparing new inputs with last inputs to not double the display
+
+  if ((lastUserLeague !== userLeague) || (lastUserTeam !== userTeam) || (lastUserDate !== userDate)) {
+    newsContainer.innerHTML = ""
+    getApiNews(userLeague, userTeam, userDate);
+
+  if((lastUserLeague !== newsLeague)||(lastUserTeam !== newsTeam)||(lastUserDate !== newsDate)){
+    newsContainer.innerHTML = ""
+    matchboxesEl.innerHTML = ""
+    getApiNews(newsLeague, newsTeam, newsDate);
+    getMatchData(userLeague, userTeam, userDate);
+
+    // matchboxesEl.innerHTML = ""
+    // getMatchData(league, team, date)
+  }
+  
+  // Save last inputs
+
+  var lastUserLeague = userLeague
+  var lastUserTeam = userTeam
+  var lastUserDate = userDate
+
+  var lastUserLeague = newsLeague
+  var lastUserTeam = newsTeam
+  var lastUserDate = newsDate
+ 
+  // get results data
+  DisplayResults()
+})
+
+function DisplayResults() {
+  // Display Results
   welcomeText.style.display = 'none';
-
   contentDiv.classList.add("content-element");
   contentDiv.classList.remove("userform", "content");
   for (var i = 0; i < formsEl.length; i++) {
@@ -31,22 +71,12 @@ searchBtn.addEventListener("click", () => {
   }
   searchBtn.setAttribute("style", "margin: 0 1px;");
 
-  // Comparing new inputs with last inputs to not double the display
-  if ((lastUserLeague !== userLeague) || (lastUserTeam !== userTeam) || (lastUserDate !== userDate)) {
-    newsContainer.innerHTML = ""
-    getApiNews(userLeague, userTeam, userDate);
-    // matchboxesEl.innerHTML = ""
-    // getMatchData(league, team, date)
-  }
-  // Save last inputs
-  var lastUserLeague = userLeague
-  var lastUserTeam = userTeam
-  var lastUserDate = userDate
 
   // Display search box, results in column
   mainEl.setAttribute("style", "display:flex; flex-direction: column;");
   // Give Space for news box and matchbox 
   resultsEl.classList.add("col-lg-12")
+
   resultsEl.style.cssText =
   `display: flex; 
   justify-content: center;`
@@ -54,6 +84,11 @@ searchBtn.addEventListener("click", () => {
   matchboxesEl.addClass("col-lg-5")
 
 })
+
+
+  newsContainer.classList.add("col-lg-6")
+  matchboxesEl.classList.add("col-lg-6")
+}
 
 
 // Declare API news key
@@ -219,26 +254,20 @@ var getApiNews = function (userLeague, userTeam, userDate) {
 
 
 
+
 var searchBtnEl = $('#search-btn')
 var j = 0;
+
+
 
 //get leagueID and set as var
 //key1: cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11
 //key2: 26eb315a46msh99f692d58ae8f5fp13ad5cjsn2bd8a4ffb6e6
 
-var date = '13/11/2022';
-var league = "Bundesliga";
-var team = "";
-
-searchBtnEl.on('click', function () {
-  getMatchData(league, team, date)
-})
-
-
 const options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': '26eb315a46msh99f692d58ae8f5fp13ad5cjsn2bd8a4ffb6e6',
+    'X-RapidAPI-Key': 'cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11',
     'X-RapidAPI-Host': 'footapi7.p.rapidapi.com'
   }
 };
@@ -258,6 +287,7 @@ function getMatchData(league, team, date) {
       //gets every game in that league or team
       console.log(data)
 
+
       // header for matches
       var headerMatchEl = document.createElement("h2");
       headerMatchEl.textContent = "Matches";
@@ -273,13 +303,20 @@ function getMatchData(league, team, date) {
        matchboxesEl.css({"display": "flex", "flex-direction": "column", "margin": "50px", "border": "solid 2px black", "border-radius": "10px", "padding": "0"})
       
       getLeagueGames(league, team, data)
+
+      getLeagueGames(league, team, data, date)
+
       //saves raw data (all matches for a given date) locally
     })
 }
 
 //gets every game for the inputted league and team if a team is chosen
+
 function getLeagueGames(league, team, data) {
  
+
+
+function getLeagueGames(league, team, data, date) {
 
   //for the first 100 games of the data set, save all the league games\
   //if the chosen date is in the future, display match start time
@@ -343,8 +380,6 @@ function getTeamGames(league, team, data) {
     //  
     // }
   }
-  var chosenTeam = JSON.parse(localStorage.getItem(team))
-  getMatchScore2(chosenTeam)
 }
 
 //if status == "notstarted" use future game function
@@ -421,5 +456,4 @@ function appendResults(team1name, team1score, team2name, team2score, date) {
   teamspEl.appendChild(matchDate)
   matchboxEl.append(teamspEl)
   matchboxesEl.append(matchboxEl)
-  resultsEl.append(matchboxesEl)
 }
