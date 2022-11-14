@@ -14,7 +14,10 @@ var searchBtn = document.querySelector("#search-btn");
 var formsEl = document.querySelectorAll(".userform");
 var mainEl = document.querySelector("main")
 var resultsEl = document.querySelector(".results")
-
+// Variables of last inputs 
+var lastUserLeague = ""
+var lastUserTeam = ""
+var lastUserDate = ""
 
 searchBtn.addEventListener("click", () => {
 
@@ -26,9 +29,19 @@ searchBtn.addEventListener("click", () => {
     formsEl[i].setAttribute("style", "margin: 0 1px;");
   }
   searchBtn.setAttribute("style", "margin: 0 1px;");
-  getApiNews(userLeague, userTeam, userDate);
 
-
+  // Comparing new inputs with last inputs to not double the display
+  if((lastUserLeague !== userLeague)||(lastUserTeam !== userTeam)||(lastUserDate !== userDate)){
+    newsContainer.innerHTML = ""
+    getApiNews(userLeague, userTeam, userDate);   
+    // matchboxesEl.innerHTML = ""
+    // getMatchData(league, team, date)
+  }
+  // Save last inputs
+  var lastUserLeague = userLeague
+  var lastUserTeam = userTeam
+  var lastUserDate = userDate
+ 
   // Display search box, results in column
   mainEl.setAttribute("style", "display:flex; flex-direction: column;");
   // Give Space for news box and matchbox 
@@ -389,4 +402,5 @@ function appendResults(team1name, team1score, team2name, team2score, date) {
   teamspEl.appendChild(matchDate)
   matchboxEl.append(teamspEl)
   matchboxesEl.append(matchboxEl)
+  resultsEl.append(matchboxesEl)
 }
