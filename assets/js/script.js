@@ -8,6 +8,7 @@ $(function () {
 
 
 // variables
+var matchboxesEl = $('#matchbox')
 var welcomeText = document.querySelector("#welcome-note");
 var contentDiv = document.querySelector(".content");
 var searchBtn = document.querySelector("#search-btn");
@@ -46,8 +47,11 @@ searchBtn.addEventListener("click", () => {
   mainEl.setAttribute("style", "display:flex; flex-direction: column;");
   // Give Space for news box and matchbox 
   resultsEl.classList.add("col-lg-12")
-  newsContainer.classList.add("col-lg-6")
-  matchboxesEl.classList.add("col-lg-6")
+  resultsEl.style.cssText =
+  `display: flex; 
+  justify-content: center;`
+  newsContainer.classList.add("col-lg-5")
+  matchboxesEl.addClass("col-lg-5")
 
 })
 
@@ -216,7 +220,6 @@ var getApiNews = function (userLeague, userTeam, userDate) {
 
 
 var searchBtnEl = $('#search-btn')
-var matchboxesEl = $('#matchbox')
 var j = 0;
 
 //get leagueID and set as var
@@ -254,7 +257,7 @@ function getMatchData(league, team, date) {
     .then(function (data) {
       //gets every game in that league or team
       console.log(data)
-      
+
       // header for matches
       var headerMatchEl = document.createElement("h2");
       headerMatchEl.textContent = "Matches";
@@ -267,6 +270,7 @@ function getMatchData(league, team, date) {
       border-radius: 10px 10px 0 0;
       `;
       matchboxesEl.append(headerMatchEl)
+       matchboxesEl.css({"display": "flex", "flex-direction": "column", "margin": "50px", "border": "solid 2px black", "border-radius": "10px", "padding": "0"})
       
       getLeagueGames(league, team, data)
       //saves raw data (all matches for a given date) locally
@@ -275,6 +279,8 @@ function getMatchData(league, team, date) {
 
 //gets every game for the inputted league and team if a team is chosen
 function getLeagueGames(league, team, data) {
+ 
+
   //for the first 100 games of the data set, save all the league games\
   //if the chosen date is in the future, display match start time
   if (moment(date).format('L hh:mm') > moment().format('L hh:mm')) {
@@ -386,7 +392,6 @@ function appendResults(team1name, team1score, team2name, team2score, date) {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 250px;
   border: 1px solid black;
   padding: 1%;
   background-color: rgba(255,255,255,0.8);
