@@ -31,9 +31,9 @@ searchBtn.addEventListener("click", () => {
   searchBtn.setAttribute("style", "margin: 0 1px;");
 
   // Comparing new inputs with last inputs to not double the display
-  if((lastUserLeague !== userLeague)||(lastUserTeam !== userTeam)||(lastUserDate !== userDate)){
+  if ((lastUserLeague !== userLeague) || (lastUserTeam !== userTeam) || (lastUserDate !== userDate)) {
     newsContainer.innerHTML = ""
-    getApiNews(userLeague, userTeam, userDate);   
+    getApiNews(userLeague, userTeam, userDate);
     // matchboxesEl.innerHTML = ""
     // getMatchData(league, team, date)
   }
@@ -41,7 +41,7 @@ searchBtn.addEventListener("click", () => {
   var lastUserLeague = userLeague
   var lastUserTeam = userTeam
   var lastUserDate = userDate
- 
+
   // Display search box, results in column
   mainEl.setAttribute("style", "display:flex; flex-direction: column;");
   // Give Space for news box and matchbox 
@@ -184,15 +184,15 @@ function getNews(data) {
   padding: 0;
   `;
 }
-var userLeague= "champions%20league"
-var userTeam ="A.C.%20Milan"
-var userDate ="2022-10-02"
+var userLeague = "champions%20league"
+var userTeam = "A.C.%20Milan"
+var userDate = "2022-10-02"
 
 
 // Functionality to get users news data from the input league, team and date form api(userLeague, userTeam, userDate)
 var getApiNews = function (userLeague, userTeam, userDate) {
   var apiUrl = 'https://content.guardianapis.com/search?q=' + userLeague + '&q=' + userTeam + '&from-date=' + userDate + '&api-key=' + apiNewsKey;
-  
+
   // Access open weather map resources across the network
   fetch(apiUrl)
     .then(function (response) {
@@ -254,6 +254,20 @@ function getMatchData(league, team, date) {
     .then(function (data) {
       //gets every game in that league or team
       console.log(data)
+      
+      // header for matches
+      var headerMatchEl = document.createElement("h2");
+      headerMatchEl.textContent = "Matches";
+      headerMatchEl.style.cssText = `
+      background-color: rgb(65, 64, 64);
+      color: white;
+      font-size: 50px;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 10px 10px 0 0;
+      `;
+      matchboxesEl.append(headerMatchEl)
+      
       getLeagueGames(league, team, data)
       //saves raw data (all matches for a given date) locally
     })
