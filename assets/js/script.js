@@ -8,6 +8,7 @@ $(function () {
 
 
 // variables
+var matchboxesEl = $('#matchbox')
 var welcomeText = document.querySelector("#welcome-note");
 var contentDiv = document.querySelector(".content");
 var searchBtn = document.querySelector("#search-btn");
@@ -31,16 +32,27 @@ searchBtnEl.on('click', function () {
 
   
   // Comparing new inputs with last inputs to not double the display
+
+  if ((lastUserLeague !== userLeague) || (lastUserTeam !== userTeam) || (lastUserDate !== userDate)) {
+    newsContainer.innerHTML = ""
+    getApiNews(userLeague, userTeam, userDate);
+
   if((lastUserLeague !== newsLeague)||(lastUserTeam !== newsTeam)||(lastUserDate !== newsDate)){
     newsContainer.innerHTML = ""
     matchboxesEl.innerHTML = ""
     getApiNews(newsLeague, newsTeam, newsDate);
     getMatchData(userLeague, userTeam, userDate);
+
     // matchboxesEl.innerHTML = ""
     // getMatchData(league, team, date)
   }
   
   // Save last inputs
+
+  var lastUserLeague = userLeague
+  var lastUserTeam = userTeam
+  var lastUserDate = userDate
+
   var lastUserLeague = newsLeague
   var lastUserTeam = newsTeam
   var lastUserDate = newsDate
@@ -59,13 +71,25 @@ function DisplayResults() {
   }
   searchBtn.setAttribute("style", "margin: 0 1px;");
 
+
   // Display search box, results in column
   mainEl.setAttribute("style", "display:flex; flex-direction: column;");
   // Give Space for news box and matchbox 
   resultsEl.classList.add("col-lg-12")
+
+  resultsEl.style.cssText =
+  `display: flex; 
+  justify-content: center;`
+  newsContainer.classList.add("col-lg-5")
+  matchboxesEl.addClass("col-lg-5")
+
+})
+
+
   newsContainer.classList.add("col-lg-6")
   matchboxesEl.classList.add("col-lg-6")
 }
+
 
 // Declare API news key
 var newsCount = 3;
@@ -199,15 +223,15 @@ function getNews(data) {
   padding: 0;
   `;
 }
-var userLeague= "champions%20league"
-var userTeam ="A.C.%20Milan"
-var userDate ="2022-10-02"
+var userLeague = "champions%20league"
+var userTeam = "A.C.%20Milan"
+var userDate = "2022-10-02"
 
 
 // Functionality to get users news data from the input league, team and date form api(userLeague, userTeam, userDate)
 var getApiNews = function (userLeague, userTeam, userDate) {
   var apiUrl = 'https://content.guardianapis.com/search?q=' + userLeague + '&q=' + userTeam + '&from-date=' + userDate + '&api-key=' + apiNewsKey;
-  
+
   // Access open weather map resources across the network
   fetch(apiUrl)
     .then(function (response) {
@@ -228,6 +252,11 @@ var getApiNews = function (userLeague, userTeam, userDate) {
     });
 };
 
+
+
+
+var searchBtnEl = $('#search-btn')
+var j = 0;
 
 
 
@@ -257,13 +286,38 @@ function getMatchData(league, team, date) {
     .then(function (data) {
       //gets every game in that league or team
       console.log(data)
+
+
+      // header for matches
+      var headerMatchEl = document.createElement("h2");
+      headerMatchEl.textContent = "Matches";
+      headerMatchEl.style.cssText = `
+      background-color: rgb(65, 64, 64);
+      color: white;
+      font-size: 50px;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 10px 10px 0 0;
+      `;
+      matchboxesEl.append(headerMatchEl)
+       matchboxesEl.css({"display": "flex", "flex-direction": "column", "margin": "50px", "border": "solid 2px black", "border-radius": "10px", "padding": "0"})
+      
+      getLeagueGames(league, team, data)
+
       getLeagueGames(league, team, data, date)
+
       //saves raw data (all matches for a given date) locally
     })
 }
 
 //gets every game for the inputted league and team if a team is chosen
+
+function getLeagueGames(league, team, data) {
+ 
+
+
 function getLeagueGames(league, team, data, date) {
+
   //for the first 100 games of the data set, save all the league games\
   //if the chosen date is in the future, display match start time
   if (moment(date).format('L hh:mm') > moment().format('L hh:mm')) {
@@ -373,7 +427,6 @@ function appendResults(team1name, team1score, team2name, team2score, date) {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 250px;
   border: 1px solid black;
   padding: 1%;
   background-color: rgba(255,255,255,0.8);
