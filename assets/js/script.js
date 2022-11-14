@@ -33,10 +33,6 @@ searchBtnEl.on('click', function () {
   
   // Comparing new inputs with last inputs to not double the display
 
-  if ((lastUserLeague !== userLeague) || (lastUserTeam !== userTeam) || (lastUserDate !== userDate)) {
-    newsContainer.innerHTML = ""
-    getApiNews(userLeague, userTeam, userDate);
-
   if((lastUserLeague !== newsLeague)||(lastUserTeam !== newsTeam)||(lastUserDate !== newsDate)){
     newsContainer.innerHTML = ""
     matchboxesEl.innerHTML = ""
@@ -83,13 +79,7 @@ function DisplayResults() {
   newsContainer.classList.add("col-lg-5")
   matchboxesEl.addClass("col-lg-5")
 
-})
-
-
-  newsContainer.classList.add("col-lg-6")
-  matchboxesEl.classList.add("col-lg-6")
 }
-
 
 // Declare API news key
 var newsCount = 3;
@@ -267,7 +257,7 @@ var j = 0;
 const options = {
   method: 'GET',
   headers: {
-    'X-RapidAPI-Key': 'cc22227a09msh80aec473e0852dap1635eejsn104bb08e4e11',
+    'X-RapidAPI-Key': '26eb315a46msh99f692d58ae8f5fp13ad5cjsn2bd8a4ffb6e6',
     'X-RapidAPI-Host': 'footapi7.p.rapidapi.com'
   }
 };
@@ -302,7 +292,6 @@ function getMatchData(league, team, date) {
       matchboxesEl.append(headerMatchEl)
        matchboxesEl.css({"display": "flex", "flex-direction": "column", "margin": "50px", "border": "solid 2px black", "border-radius": "10px", "padding": "0"})
       
-      getLeagueGames(league, team, data)
 
       getLeagueGames(league, team, data, date)
 
@@ -311,10 +300,6 @@ function getMatchData(league, team, date) {
 }
 
 //gets every game for the inputted league and team if a team is chosen
-
-function getLeagueGames(league, team, data) {
- 
-
 
 function getLeagueGames(league, team, data, date) {
 
