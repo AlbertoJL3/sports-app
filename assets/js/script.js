@@ -6,7 +6,7 @@ $(function () {
   });
 });
 
-// RANA
+
 // variables
 var welcomeText = document.querySelector("#welcome-note");
 var contentDiv = document.querySelector(".content");
@@ -16,34 +16,29 @@ var mainEl = document.querySelector("main")
 var resultsEl = document.querySelector(".results")
 
 
-
 searchBtn.addEventListener("click", () => {
-    
-    // adding if statement to hide welcome-note
-  if (welcomeText.style.display === 'none') {
-    welcomeText.style.display = 'block';
-  } 
-  else{
-    welcomeText.style.display = 'none';
-  }
+
+  welcomeText.style.display = 'none';
+
   contentDiv.classList.add("content-element");
   contentDiv.classList.remove("userform", "content");
-for (var i = 0; i < formsEl.length; i++) {
-  formsEl[i].setAttribute("style", "margin: 0 1px;");
-}
-searchBtn.setAttribute("style", "margin: 0 1px;");
-getApiNews()
+  for (var i = 0; i < formsEl.length; i++) {
+    formsEl[i].setAttribute("style", "margin: 0 1px;");
+  }
+  searchBtn.setAttribute("style", "margin: 0 1px;");
+  getApiNews(userLeague, userTeam, userDate);
 
-// Display search box, results in column
-mainEl.setAttribute("style", "display:flex; flex-direction: column;");
-// Give Space for news box and matchbox 
-resultsEl.classList.add("col-12")
-newsContainer.classList.add("col-8")
-matchboxesEl.classList.add("col-6")
+
+  // Display search box, results in column
+  mainEl.setAttribute("style", "display:flex; flex-direction: column;");
+  // Give Space for news box and matchbox 
+  resultsEl.classList.add("col-lg-12")
+  newsContainer.classList.add("col-lg-6")
+  matchboxesEl.classList.add("col-lg-6")
 
 })
 
-// VACI
+
 // Declare API news key
 var newsCount = 3;
 var newsContainer = document.querySelector(".news-container");
@@ -99,10 +94,8 @@ function loopArticles(articles, newsCount) {
     if (i < articles.length) {
       // Title of article
       var titleArticle = articles[i].webTitle;
-      console.log(titleArticle);
       // Url of article
       var urlArticle = articles[i].webUrl;
-      console.log(urlArticle);
       // Date published
       var datePublished = moment(articles[i].webPublicationDate).format("MM/DD/YYYY");
 
@@ -110,7 +103,6 @@ function loopArticles(articles, newsCount) {
     }
     else {
       newsContainer.appendChild(goBackEl);
-
     }
   }
 }
@@ -171,18 +163,23 @@ function getArticles(data) {
 function getNews(data) {
   getArticles(data);
   newsContainer.style.cssText = `
+  display: flex;
+  flex-direction: column;
   margin: 50px;
   border: solid 2px black;
   border-radius: 10px;
+  padding: 0;
   `;
 }
+var userLeague= "champions%20league"
+var userTeam ="A.C.%20Milan"
+var userDate ="2022-10-02"
 
 
 // Functionality to get users news data from the input league, team and date form api(userLeague, userTeam, userDate)
 var getApiNews = function (userLeague, userTeam, userDate) {
-  // var apiUrl = 'https://content.guardianapis.com/search?q=' + userLeague + '&q=' + userTeam + '&from-date=' + userDate + '&api-key=' + apiNewsKey;
-  var apiUrl = "https://content.guardianapis.com/search?q=champions%20league&q=juventus&from-date=2022-10-02&api-key=db4aab48-4635-49ff-a537-39a673481b78";
-
+  var apiUrl = 'https://content.guardianapis.com/search?q=' + userLeague + '&q=' + userTeam + '&from-date=' + userDate + '&api-key=' + apiNewsKey;
+  
   // Access open weather map resources across the network
   fetch(apiUrl)
     .then(function (response) {
@@ -205,8 +202,6 @@ var getApiNews = function (userLeague, userTeam, userDate) {
 
 
 
-
-// LOPEZ
 var searchBtnEl = $('#search-btn')
 var matchboxesEl = $('#matchbox')
 var j = 0;
@@ -270,7 +265,7 @@ function getLeagueGames(league, team, data) {
           //formats date
           MatchDate: moment.unix(data.events[i].startTimestamp).format("L hh:mm a")
         } //turn into object and save needed parameters.  
-        j = j+1;
+        j = j + 1;
       }
     }
   } else {
@@ -288,11 +283,11 @@ function getLeagueGames(league, team, data) {
           //formats date
           MatchDate: moment.unix(data.events[i].time.currentPeriodStartTimestamp).format("L hh:mm a")
         } //turn into object and save needed parameters.  
-        j = j+1;
+        j = j + 1;
       }
     }
   }
-  
+
   localStorage.setItem(league, JSON.stringify(leagueGames))
   if (team !== '') {
     getTeamGames(league, team, leagueGames)
