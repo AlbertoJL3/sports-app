@@ -22,10 +22,47 @@
         <div class="content">
             <!-- added form class to all dropdowns to create new var in js  -->
             <select class="form-control userform">
-                <option>Select your League</option>
+                <option value = "0">Select your League</option>
+                <option value = "1">Premier league</option>
+                <option value ="2">Bundesliga</option>
+                
             </select>
             <select class="form-control userform">
                 <option>Select your Team</option>
+                <option>Manchester City</option>
+                <option>Brentford</option>
+                <option>AFC Bournemouth</option>
+                <option>Liverpool</option>
+                <option>Southampton</option>
+                <option>Nottingham Forest</option>
+                <option>Crystal Palace</option>
+                <option>Tottenham Hotspur</option>
+                <option>Leeds United</option>
+                <option>West Ham United</option>
+                <option>Leicester City</option>
+                <option>Newcastle United</option>
+                <option>Wolverhampton</option>
+                <option>Arsenal</option>
+                <option>Brighton & Hove Albion</option>
+                <option>Aston Villa</option>
+                <option>Fulham</option>
+                <option>Manchester United</option>
+                <option>1899 Hoffenheim</option>
+                <option>VfL Wolfsburg</option>
+                <option>Bayer 04 Leverkusen</option>
+                <option>VfB Stuttgart</option>
+                <option>FC Augsburg</option>
+                <option>VfL Bochum</option>
+                <option>Hertha BSC</option>
+                <option>FC Köln</option>
+                <option>Werder Bremen</option>
+                <option>RB Leipzig</option>
+                <option>FC Schalke 04</option>
+                <option>Bayern München</option>
+                <option>FSV Mainz 05</option>
+                <option>Eintracht Frankfurt</option>
+                <option>SC Freiburg</option>
+                <option>FC Union Berlin</option>
             </select>
 
             <input class="form-control userform" id="datepicker" autocomplete="off" placeholder="Select a Date" />
@@ -33,11 +70,19 @@
             <button id="search-btn" type="button" class="btn btn-dark">Search</button>
         </div>
 
+
+        <!-- News container div -->
+        <div class="news-container"></div>
+        <div id="matchbox">
+
+        </div>
+
         <!-- Results container div -->
         <div class="results row">
             <div class="news-container"></div>
             <div id="matchbox"></div>
         </div>
+
 
     </main>
 
@@ -50,4 +95,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
 <script src="./assets/js/script.js"></script>
 
+
+
 </html>
+
